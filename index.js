@@ -45,7 +45,7 @@ app.get('/test', function(req, res) {
   res.sendFile(path.join(__dirname, '/public/test.html'));
 });
 
-app.post(path, (req, res) => {
+app.post('/stripe', (req, res) => {
   const stripe_version = req.query.api_version;
   if (!stripe_version) {
     res.status(400).end();
