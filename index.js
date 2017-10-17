@@ -48,7 +48,7 @@ app.get('/test', function(req, res) {
 app.post('/stripe/ephemeral_keys', (req, res) => {
   const stripe_version = req.query.api_version;
   if (!stripe_version) {
-    res.status(400).json(req.query.api_version).end();
+    res.status(400).json({'stripe_version':stripe_version}});
     return;
   }
   // This function assumes that some previous middleware has determined the
