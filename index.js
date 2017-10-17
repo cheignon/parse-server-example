@@ -1,6 +1,6 @@
 // Example express application adding the parse-server module to expose Parse
 // compatible API routes.
-
+var stripe = require('stripe')(process.env.STRIPE_KEY);
 var express = require('express');
 var ParseServer = require('parse-server').ParseServer;
 var path = require('path');
@@ -43,6 +43,24 @@ app.get('/', function(req, res) {
 // Remove this before launching your app
 app.get('/test', function(req, res) {
   res.sendFile(path.join(__dirname, '/public/test.html'));
+});
+
+app.post('/stripe', (req, res) => {
+  const stripe_version = req.query.api_version;
+  if (!stripe_version) {
+    res.status(400).end();
+    return;
+  }
+  // This function assumes that some previous middleware has determined the
+  // correct customerId for the session and saved it on the request object.
+  stripe.ephemeralKeys.create(
+    {customer: req.customerId},
+    {stripe_version: stripe_version}
+  ).then((key) => {
+    res.status(200).json(key);
+  }).catch((err) => {
+    res.status(500).end();
+  });
 });
 
 var port = process.env.PORT || 1337;
