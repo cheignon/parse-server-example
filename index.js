@@ -45,7 +45,18 @@ app.get('/test', function(req, res) {
   res.sendFile(path.join(__dirname, '/public/test.html'));
 });
 
-app.post('/stripe/ephemeral_keys', (req, res) => {
+
+
+var port = process.env.PORT || 1337;
+var httpServer = require('http').createServer(app);
+httpServer.listen(port, function() {
+    console.log('parse-server-example running on port ' + port + '.');
+});
+
+// This will enable the Live Query real-time server
+ParseServer.createLiveQueryServer(httpServer);
+
+app.post('/ephemeral_keys', (req, res) => {
   const stripe_version = req.query.api_version;
   if (!stripe_version) {
     res.status(400).json({'stripe_version':stripe_version}});
@@ -62,12 +73,3 @@ app.post('/stripe/ephemeral_keys', (req, res) => {
     res.status(500).end();
   });
 });
-
-var port = process.env.PORT || 1337;
-var httpServer = require('http').createServer(app);
-httpServer.listen(port, function() {
-    console.log('parse-server-example running on port ' + port + '.');
-});
-
-// This will enable the Live Query real-time server
-ParseServer.createLiveQueryServer(httpServer);
