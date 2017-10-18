@@ -2,6 +2,7 @@
 // compatible API routes.
 var stripe = require('stripe')(process.env.STRIPE_KEY);
 var express = require('express');
+var bodyParser = require("body-parser");
 var ParseServer = require('parse-server').ParseServer;
 var path = require('path');
 
@@ -26,6 +27,10 @@ var api = new ParseServer({
 // javascriptKey, restAPIKey, dotNetKey, clientKey
 
 var app = express();
+//Here we are configuring express to use body-parser as middle-ware.
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
 
 // Serve static assets from the /public folder
 app.use('/public', express.static(path.join(__dirname, '/public')));
