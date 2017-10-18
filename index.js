@@ -57,7 +57,11 @@ httpServer.listen(port, function() {
 ParseServer.createLiveQueryServer(httpServer);
 
 app.post('/ephemeral_keys', (req, res) => {
-  const stripe_version = req.query.api_version;
+
+  console.log(req);
+
+  var stripe_version = req.query.api_version;
+  console.log('stripe_version ' + stripe_version + '.');
   if (!stripe_version) {
     res.status(404).end();
     return;
