@@ -80,6 +80,7 @@ app.post('/stripe/ephemeral_keys', (req, res) => {
   }, function(err, customer) {
     // asynchronously called
     if (!customer) {
+      console.log(err);
       res.status(400).end();
       return;
     }
