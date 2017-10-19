@@ -95,7 +95,7 @@ app.post('/stripe/ephemeral_keys', (req, res) => {
   }
 
   stripe.customers.create({
-    email:user_email
+    email:user_email,
     description: 'Customer for '+ user_email,
     source: stripe_token // obtained with Stripe.js
   
