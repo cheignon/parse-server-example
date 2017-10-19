@@ -55,40 +55,18 @@ app.get('/test', function(req, res) {
 var port = process.env.PORT || 1337;
 var httpServer = require('http').createServer(app);
 httpServer.listen(port, function() {
-    console.log('parse-server-example running on port ' + port + '.');
+    console.log('helps-server running on port ' + port + '.');
 });
 
 // This will enable the Live Query real-time server
 ParseServer.createLiveQueryServer(httpServer);
-
-
-app.post('/stripe/ephemeral_keys', (req, res) => {
-
-  var stripe_version = req.body.api_version;
-  console.log('stripe_version ' + stripe_version + '.');
-  if (!stripe_version) {
-    res.status(404).end();
-    return;
-  }
-  // This function assumes that some previous middleware has determined the
-  // correct customerId for the session and saved it on the request object.
-  stripe.ephemeralKeys.create(
-    {customer: req.customerId},
-    {stripe_version: stripe_version}
-  ).then((key) => {
-    res.status(200).json(key);
-  }).catch((err) => {
-    res.status(500).end();
-  });
-});
-
 
 app.post('/stripe/ephemeral_keys', (req, res) => {
 
   var stripe_version = req.body.api_version;
   var stripe_token = req.body.token;
   var user_email = req.body.email;
-  console.log('stripe_version ' + stripe_version + '.');
+  console.log(req.body);
   if (!stripe_version || !stripe_token  || !user_email) {
     res.status(404).end();
     return;
@@ -105,6 +83,8 @@ app.post('/stripe/ephemeral_keys', (req, res) => {
       res.status(400).end();
       return;
     }
+    // This function assumes that some previous middleware has determined the
+    // correct customerId for the session and saved it on the request object.
     stripe.ephemeralKeys.create(
       {customer: customer.id},
       {stripe_version: stripe_version}
@@ -114,7 +94,6 @@ app.post('/stripe/ephemeral_keys', (req, res) => {
       res.status(500).end();
     });
   });
-  // This function assumes that some previous middleware has determined the
-  // correct customerId for the session and saved it on the request object.
+
   
 });
