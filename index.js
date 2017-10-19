@@ -61,22 +61,21 @@ httpServer.listen(port, function() {
 // This will enable the Live Query real-time server
 ParseServer.createLiveQueryServer(httpServer);
 
-app.post('/stripe/ephemeral_keys', (req, res) => {
 
-  var stripe_version = req.body.api_version;
+// Stripe
+app.post('/stripe/create/user', (req, res) => {
+
+
   var stripe_token = req.body.token;
   var user_email = req.body.email;
-  console.log(req.body);
-  if (!stripe_version || !stripe_token  || !user_email) {
-    res.status(404).end();
+  if (!stripe_token || !user_email) {
+    res.status(400).end();
     return;
   }
-
   stripe.customers.create({
     email:user_email,
-    description: 'Customer for '+ user_email,
+    description: 'Customer '+user_email,
     source: stripe_token // obtained with Stripe.js
-  
   }, function(err, customer) {
     // asynchronously called
     if (!customer) {
@@ -84,16 +83,30 @@ app.post('/stripe/ephemeral_keys', (req, res) => {
       res.status(400).end();
       return;
     }
-    // This function assumes that some previous middleware has determined the
-    // correct customerId for the session and saved it on the request object.
-    stripe.ephemeralKeys.create(
-      {customer: customer.id},
-      {stripe_version: stripe_version}
-    ).then((key) => {
-      res.status(200).json(key);
-    }).catch((err) => {
-      res.status(500).end();
-    });
+    res.status(200).json({'id':customer.id});
+  });
+});
+
+app.post('/stripe/ephemeral_keys', (req, res) => {
+
+  var stripe_version = req.body.api_version;
+  var user_id = req.body.id;
+  
+  console.log(req.body);
+  if (!stripe_version || !user_id) {
+    res.status(404).end();
+    return;
+  }
+
+  // This function assumes that some previous middleware has determined the
+  // correct customerId for the session and saved it on the request object.
+  stripe.ephemeralKeys.create(
+    {customer: user_id},
+    {stripe_version: stripe_version}
+  ).then((key) => {
+    res.status(200).json(key);
+  }).catch((err) => {
+    res.status(500).end();
   });
 
   
