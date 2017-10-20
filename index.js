@@ -61,10 +61,17 @@ httpServer.listen(port, function() {
 // This will enable the Live Query real-time server
 ParseServer.createLiveQueryServer(httpServer);
 
+function user_callback(res,err, customer) {
+ 
+ if (!customer) {
+    console.log(err);
+    res.status(404).end();
+    return;
+  }
+  res.status(200).json({'id':customer.id});
+};
 
-// Stripe
-app.post('/stripe/create/user', (req, res) => {
-
+function create_user (req, res, callback) {
 
   var stripe_token = req.body.token;
   var user_email = req.body.email;
@@ -78,13 +85,31 @@ app.post('/stripe/create/user', (req, res) => {
     source: stripe_token // obtained with Stripe.js
   }, function(err, customer) {
     // asynchronously called
-    if (!customer) {
-      console.log(err);
-      res.status(400).end();
-      return;
-    }
-    res.status(200).json({'id':customer.id});
+    callback(res,err,customer);
+    
   });
+ 
+};
+// Stripe
+app.post('/stripe/user', (req, res) => {
+
+  var customer_id = req.body.customer_id;
+  if(customer_id){
+    stripe.customers.retrieve(
+      customer_id,
+      function(err, customer) {
+        // asynchronously called
+        if (!customer) {
+            console.log(err);
+            create_user(req, res, user_callback)
+            return;
+        }
+        res.status(200).json({'id':customer.id});
+      }
+    );
+    return;
+  }
+  create_user(req, res, user_callback)
 });
 
 app.post('/stripe/ephemeral_keys', (req, res) => {
