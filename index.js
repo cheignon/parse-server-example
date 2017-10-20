@@ -62,7 +62,7 @@ httpServer.listen(port, function() {
 ParseServer.createLiveQueryServer(httpServer);
 
 function user_callback(res,err, customer) {
- 
+ console.log('user_callback');
  if (!customer) {
     console.log(err);
     res.status(404).end();
@@ -73,7 +73,9 @@ function user_callback(res,err, customer) {
 
 function create_user (req, res, callback) {
 
-  var stripe_token = req.body.token;
+  console.log('create_user');
+
+  var source_tripe = req.body.source;
   var user_email = req.body.email;
   if (!stripe_token || !user_email) {
     res.status(400).end();
@@ -82,7 +84,7 @@ function create_user (req, res, callback) {
   stripe.customers.create({
     email:user_email,
     description: 'Customer '+user_email,
-    source: stripe_token // obtained with Stripe.js
+    source: source_tripe // obtained with Stripe.js
   }, function(err, customer) {
     // asynchronously called
     callback(res,err,customer);
@@ -115,10 +117,10 @@ app.post('/stripe/user', (req, res) => {
 app.post('/stripe/ephemeral_keys', (req, res) => {
 
   var stripe_version = req.body.api_version;
-  var user_id = req.body.id;
+  var customer_id = req.body.customer_id;
   
   console.log(req.body);
-  if (!stripe_version || !user_id) {
+  if (!stripe_version || !customer_id) {
     res.status(404).end();
     return;
   }
@@ -126,7 +128,7 @@ app.post('/stripe/ephemeral_keys', (req, res) => {
   // This function assumes that some previous middleware has determined the
   // correct customerId for the session and saved it on the request object.
   stripe.ephemeralKeys.create(
-    {customer: user_id},
+    {customer: customer_id},
     {stripe_version: stripe_version}
   ).then((key) => {
     res.status(200).json(key);
