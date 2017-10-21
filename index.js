@@ -4,6 +4,7 @@ var stripe = require('stripe')(process.env.STRIPE_KEY);
 var express = require('express');
 var bodyParser = require("body-parser");
 var ParseServer = require('parse-server').ParseServer;
+var ParseDashboard = require('parse-dashboard');
 var path = require('path');
 
 var databaseUri = process.env.DATABASE_URI || process.env.MONGODB_URI;
@@ -21,6 +22,29 @@ var api = new ParseServer({
   liveQuery: {
     classNames: ["Posts", "Comments"] // List of classes to support for query subscriptions
   }
+});
+
+var dashboard = new ParseDashboard({
+  "apps": [
+    {
+      "serverURL": process.env.SERVER_URL || "http://localhost:1337/parse",
+      "appId": process.env.APP_ID || 'myAppId',
+      "masterKey": process.env.MASTER_KEY || '',
+      "appName": process.env.APP_NAME || "MyApp"
+    }
+  ],
+  "users": [
+    {
+      "user":process.env.USER_ONE,
+      "pass":process.env.PW_USER_ONE
+    },
+    {
+      "user":process.env.USER_TWO,
+      "pass":process.env.PW_USER_TWO
+    }
+  ],
+  "useEncryptedPasswords": true,
+  "trustProxy": 1,
 });
 // Client-keys like the javascript key or the .NET key are not necessary with parse-server
 // If you wish you require them, you can set them as options in the initialization above:
