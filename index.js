@@ -81,11 +81,11 @@ function create_user (req, res, callback) {
   var user_email = req.body.email;
 
   if (!source_tripe) {
-    res.status(400).json({ error: 'source is undifined' });
+    res.status(400).json({ error: 'source is undefined' });
     return;
   }
   if (!user_email) {
-    res.status(400).json({ error: 'email is undifined' });
+    res.status(400).json({ error: 'email is undefined' });
     return;
   }
   stripe.customers.create({
@@ -127,11 +127,11 @@ app.post('/stripe/ephemeral_keys', (req, res) => {
   console.log(req.body);
   
   if (!stripe_version) {
-    res.status(400).json({ error: 'stripe_version is undifined' });
+    res.status(400).json({ error: 'stripe_version is undefined' });
     return;
   }
   if (!customer_id) {
-    res.status(400).json({ error: 'customer_id is undifined' });
+    res.status(400).json({ error: 'customer_id is undefined' });
     return;
   }
 
@@ -156,19 +156,19 @@ app.post('/stripe/subscriptions', (req, res) => {
   var subscription_id = req.body.subscription_id;
   var source_id = req.body.source_id;
   if (!trial_timestamp) {
-    res.status(400).json({ error: 'trial_timestamp is undifined' });
+    res.status(400).json({ error: 'trial_timestamp is undefined' });
     return;
   }
   if (!customer_id) {
-    res.status(400).json({ error: 'customer_id is undifined' });
+    res.status(400).json({ error: 'customer_id is undefined' });
     return;
   }
   if (!subscription_id) {
-    res.status(400).json({ error: 'subscription_id is undifined' });
+    res.status(400).json({ error: 'subscription_id is undefined' });
     return;
   }
   if (!source_id) {
-    res.status(400).json({ error: 'source_id is undifined' });
+    res.status(400).json({ error: 'source_id is undefined' });
     return;
   }
   // This function assumes that some previous middleware has determined the
@@ -190,6 +190,72 @@ app.post('/stripe/subscriptions', (req, res) => {
       return;
     }
     res.status(200).json(subscription);
+  });
+
+});
+
+app.post('/stripe/subscriptions/delete', (req, res) => {
+
+
+  var subscription_id = req.body.subscription_id;
+  if (!subscription_id) {
+    res.status(400).json({ error: 'subscription_id is undefined' });
+    return;
+  }
+  stripe.subscriptions.del(
+  subscription_id,
+    function(err, confirmation) {
+      // asynchronously called
+      if(err){
+        res.status(500).json(err);
+        return;
+      }
+      res.status(200).json(confirmation);
+
+    });
+
+});
+
+app.post('/stripe/subscriptions/update', (req, res) => {
+
+
+  var current_subscription_id = req.body.current_subscription_id;
+  var new_subscription_id = req.body.new_subscription_id;
+  if (!current_subscription_id) {
+    res.status(400).json({ error: 'current_subscription_id is undefined' });
+    return;
+  }
+  if (!new_subscription_id) {
+    res.status(400).json({ error: 'new_subscription_id is undefined' });
+    return;
+  }
+  stripe.subscriptions.retrieve(
+  current_subscription_id,
+  function(err, subscription) {
+    // asynchronously called
+    if(err){
+      res.status(500).json(err);
+      return;
+    }
+    var item_id = subscription.items.data[0].id;
+    if(!item_id){
+      res.status(404).json({ error: 'subscription not found' });
+      return;
+    }
+    stripe.subscriptions.update(current_subscription_id, {
+      items: [{
+        id: item_id,
+        plan: new_subscription_id,
+      }],
+    }, function(err, subscription) {
+      // asynchronously called
+      if(err){
+        res.status(500).json(err);
+        return;
+      }
+      res.status(200).json(subscription);
+    });
+
   });
 
 });
