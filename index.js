@@ -55,20 +55,22 @@ app.get('/test', function(req, res) {
 var port = process.env.PORT || 1337;
 var httpServer = require('http').createServer(app);
 httpServer.listen(port, function() {
-    console.log('helps-server running on port ' + port + '.');
+  console.log('helps-server running on port ' + port + '.');
 });
 
 // This will enable the Live Query real-time server
 ParseServer.createLiveQueryServer(httpServer);
 
 function user_callback(res,err, customer) {
- console.log('user_callback');
- if (!customer) {
-    console.log(err);
-    res.status(404).end();
+  if (!customer) {
+    res.status(500).json({ error: 'failed to create a customer' });
     return;
   }
-  res.status(200).json({'id':customer.id});
+  if (!err) {
+    res.status(500).json(err);
+    return;
+  }
+  res.status(200).json(customer);
 };
 
 function create_user (req, res, callback) {
@@ -77,8 +79,13 @@ function create_user (req, res, callback) {
 
   var source_tripe = req.body.source;
   var user_email = req.body.email;
-  if (!stripe_token || !user_email) {
-    res.status(400).end();
+
+  if (!source_tripe) {
+    res.status(400).json({ error: 'source is undifined' });
+    return;
+  }
+  if (!user_email) {
+    res.status(400).json({ error: 'email is undifined' });
     return;
   }
   stripe.customers.create({
@@ -90,7 +97,7 @@ function create_user (req, res, callback) {
     callback(res,err,customer);
     
   });
- 
+
 };
 // Stripe
 app.post('/stripe/user', (req, res) => {
@@ -102,13 +109,11 @@ app.post('/stripe/user', (req, res) => {
       function(err, customer) {
         // asynchronously called
         if (!customer) {
-            console.log(err);
-            create_user(req, res, user_callback)
-            return;
+          create_user(req, res, user_callback)
+          return;
         }
         res.status(200).json({'id':customer.id});
-      }
-    );
+      });
     return;
   }
   create_user(req, res, user_callback)
@@ -120,8 +125,13 @@ app.post('/stripe/ephemeral_keys', (req, res) => {
   var customer_id = req.body.customer_id;
   
   console.log(req.body);
-  if (!stripe_version || !customer_id) {
-    res.status(404).end();
+  
+  if (!stripe_version) {
+    res.status(400).json({ error: 'stripe_version is undifined' });
+    return;
+  }
+  if (!customer_id) {
+    res.status(400).json({ error: 'customer_id is undifined' });
     return;
   }
 
@@ -130,11 +140,55 @@ app.post('/stripe/ephemeral_keys', (req, res) => {
   stripe.ephemeralKeys.create(
     {customer: customer_id},
     {stripe_version: stripe_version}
-  ).then((key) => {
-    res.status(200).json(key);
-  }).catch((err) => {
-    res.status(500).end();
+    ).then((key) => {
+      res.status(200).json(key);
+    }).catch((err) => {
+      res.status(500).end();
+    });
   });
 
+
+app.post('/stripe/subscriptions', (req, res) => {
+
+  var customer_id = req.body.customer_id;
+  var trial_timestamp = req.body.trial_timestamp;
+  var subscription_id = req.body.subscription_id;
+  var source_id = req.body.source_id;
+  if (!trial_timestamp) {
+    res.status(400).json({ error: 'trial_timestamp is undifined' });
+    return;
+  }
+  if (!customer_id) {
+    res.status(400).json({ error: 'customer_id is undifined' });
+    return;
+  }
+  if (!subscription_id) {
+    res.status(400).json({ error: 'subscription_id is undifined' });
+    return;
+  }
+  if (!source_id) {
+    res.status(400).json({ error: 'source_id is undifined' });
+    return;
+  }
+  // This function assumes that some previous middleware has determined the
+  // correct customerId for the session and saved it on the request object.
   
+  stripe.subscriptions.create({
+    customer: customer_id,
+    items: [
+    {
+      plan: subscription_id,
+    },
+    ],
+    trial_end: trial_timestamp,
+    source:source_id,
+  }, function(err, subscription) {
+  // asynchronously called
+  if(err){
+    res.status(500).json(err);
+    return;
+  }
+  res.status(200).json(subscription);
+
 });
+
