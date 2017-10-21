@@ -145,7 +145,8 @@ app.post('/stripe/ephemeral_keys', (req, res) => {
     }).catch((err) => {
       res.status(500).end();
     });
-  });
+});
+
 
 
 app.post('/stripe/subscriptions', (req, res) => {
@@ -184,11 +185,12 @@ app.post('/stripe/subscriptions', (req, res) => {
     source:source_id,
   }, function(err, subscription) {
   // asynchronously called
-  if(err){
-    res.status(500).json(err);
-    return;
-  }
-  res.status(200).json(subscription);
+    if(err){
+      res.status(500).json(err);
+      return;
+    }
+    res.status(200).json(subscription);
+  });
 
 });
 
