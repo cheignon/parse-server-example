@@ -114,7 +114,7 @@ function create_user (req, res) {
       res.status(500).json({ error: 'failed to create a customer' });
       return;
     }
-    if (!err) {
+    if (err) {
       console.log(err);
       res.status(500).json(err);
       return;
