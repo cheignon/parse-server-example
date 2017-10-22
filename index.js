@@ -88,14 +88,15 @@ ParseServer.createLiveQueryServer(httpServer);
 
 function user_callback(res,err, customer) {
   
-  if (!err) {
-    console.log(err);
-    res.status(500).json(err);
-    return;
-  }
+  
   if (!customer) {
     console.log('failed to create a customer');
     res.status(500).json({ error: 'failed to create a customer' });
+    return;
+  }
+  if (!err) {
+    console.log(err);
+    res.status(500).json(err);
     return;
   }
   res.status(200).json(customer);
@@ -141,7 +142,7 @@ app.post('/stripe/user', (req, res) => {
           create_user(req, res, user_callback)
           return;
         }
-        res.status(200).json({'id':customer.id});
+        res.status(200).json(customer);
       });
     return;
   }
