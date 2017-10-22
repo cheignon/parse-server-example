@@ -87,12 +87,15 @@ httpServer.listen(port, function() {
 ParseServer.createLiveQueryServer(httpServer);
 
 function user_callback(res,err, customer) {
-  if (!customer) {
-    res.status(500).json({ error: 'failed to create a customer' });
+  
+  if (!err) {
+    console.log(err);
+    res.status(500).json(err);
     return;
   }
-  if (!err) {
-    res.status(500).json(err);
+  if (!customer) {
+    console.log(failed to create a customer);
+    res.status(500).json({ error: 'failed to create a customer' });
     return;
   }
   res.status(200).json(customer);
