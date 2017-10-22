@@ -130,6 +130,7 @@ function create_user (req, res, callback) {
 // Stripe
 app.post('/stripe/user', (req, res) => {
 
+  console.log(req.body);
   var customer_id = req.body.customer_id;
   if(customer_id){
     stripe.customers.retrieve(
