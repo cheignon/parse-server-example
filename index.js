@@ -86,23 +86,8 @@ httpServer.listen(port, function() {
 // This will enable the Live Query real-time server
 ParseServer.createLiveQueryServer(httpServer);
 
-function user_callback(res,err, customer) {
-  
-  
-  if (!customer) {
-    console.log('failed to create a customer');
-    res.status(500).json({ error: 'failed to create a customer' });
-    return;
-  }
-  if (!err) {
-    console.log(err);
-    res.status(500).json(err);
-    return;
-  }
-  res.status(200).json(customer);
-};
 
-function create_user (req, res, callback) {
+function create_user (req, res) {
 
   console.log('create_user');
 
@@ -123,7 +108,18 @@ function create_user (req, res, callback) {
     source: source_tripe // obtained with Stripe.js
   }, function(err, customer) {
     // asynchronously called
-    callback(res,err,customer);
+    console.log('create' + customer);
+    if (!customer) {
+      console.log('failed to create a customer');
+      res.status(500).json({ error: 'failed to create a customer' });
+      return;
+    }
+    if (!err) {
+      console.log(err);
+      res.status(500).json(err);
+      return;
+    }
+    res.status(200).json(customer);
     
   });
 
@@ -138,15 +134,17 @@ app.post('/stripe/user', (req, res) => {
       customer_id,
       function(err, customer) {
         // asynchronously called
+
+        console.log('retrieve' + customer);
         if (!customer) {
-          create_user(req, res, user_callback)
+          create_user(req, res)
           return;
         }
         res.status(200).json(customer);
       });
     return;
   }
-  create_user(req, res, user_callback)
+  create_user(req, res)
 });
 
 app.post('/stripe/ephemeral_keys', (req, res) => {
