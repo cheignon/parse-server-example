@@ -94,7 +94,7 @@ function user_callback(res,err, customer) {
     return;
   }
   if (!customer) {
-    console.log(failed to create a customer);
+    console.log('failed to create a customer');
     res.status(500).json({ error: 'failed to create a customer' });
     return;
   }
