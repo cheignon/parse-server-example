@@ -12,8 +12,29 @@ var databaseUri = process.env.DATABASE_URI || process.env.MONGODB_URI;
 if (!databaseUri) {
   console.log('DATABASE_URI not specified, falling back to localhost.');
 }
+var parse_url = process.env.SERVER_URL+process.env.PARSE_MOUNT;
 
 var api = new ParseServer({
+  verifyUserEmails: true,
+  publicServerURL: parse_url,
+  emailAdapter: {
+        module: "simple-parse-smtp-adapter",
+        options: {
+            fromAddress: 'contact@helps-volunteers.fr',
+            user: 'contact@helps-volunteers.fr',
+            password: 'uW8-XyG-hXL-Rfz',
+            host: 'auth.smtp.1and1.fr',
+            isSSL: true, //True or false if you are using ssl 
+            port: 993, //SSL port or another port 
+            name: 'helps-volunteers.fr', //  optional, used for identifying to the server  
+            //Somtimes the user email is not in the 'email' field, the email is search first in 
+            //email field, then in username field, if you have the user email in another field 
+            //You can specify here 
+            emailField: 'Contact', 
+            
+        }
+    },
+  appName: process.env.APP_NAME || "MyApp",
   databaseURI: databaseUri || 'mongodb://localhost:27017/dev',
   cloud: process.env.CLOUD_CODE_MAIN || __dirname + '/cloud/main.js',
   appId: process.env.APP_ID || 'myAppId',
@@ -24,7 +45,6 @@ var api = new ParseServer({
   }
 });
 
-var parse_url = process.env.SERVER_URL+process.env.PARSE_MOUNT;
 var dashboard = new ParseDashboard({
   "apps": [
     {
