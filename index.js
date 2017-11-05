@@ -21,10 +21,10 @@ var api = new ParseServer({
         options: {
             fromAddress: 'contact@helps-volunteers.fr',
             user: 'contact@helps-volunteers.fr',
-            password: 'uW8-XyG-hXL-Rfz',
-            host: 'auth.smtp.1and1.fr',
+            password: process.env.SMTP_SERVER_PW,
+            host: process.env.SMTP_SERVER,
             isSSL: true, //True or false if you are using ssl 
-            port: 993, //SSL port or another port 
+            port: process.env.SMTP_SERVER_PORT, //SSL port or another port 
             name: 'helps-volunteers.fr', //  optional, used for identifying to the server  
             //Somtimes the user email is not in the 'email' field, the email is search first in 
             //email field, then in username field, if you have the user email in another field 
