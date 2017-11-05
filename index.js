@@ -32,7 +32,7 @@ var api = new ParseServer({
       // Verification email body
       verificationBody: 'Hi,\n\nYou are being asked to confirm the e-mail address %email% with %appname%\n\nClick here to confirm it:\n%link%',
       //OPTIONAL (will send HTML version of email):
-      verificationBodyHTML: fs.readFileSync("./verificationBody.html", "utf8") ||  null,
+      //verificationBodyHTML: fs.readFileSync("./verificationBody.html", "utf8") ||  null,
  
       // Password reset email subject
       passwordResetSubject: 'Password Reset Request for %appname%',
