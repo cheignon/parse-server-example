@@ -30,7 +30,7 @@ var api = new ParseServer({
             //Somtimes the user email is not in the 'email' field, the email is search first in 
             //email field, then in username field, if you have the user email in another field 
             //You can specify here 
-            emailField: 'Contact', 
+            emailField: 'contact@helps-volunteers.fr', 
             
         }
     },
