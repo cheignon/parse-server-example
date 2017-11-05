@@ -21,7 +21,7 @@ var api = new ParseServer({
     module: 'parse-server-mailgun-adapter-template',
     options: {
       // The address that your emails come from
-      fromAddress: 'no-reply@yourdomain.com',
+      fromAddress: 'contact@helps-volunteers.com',
       // Your domain from mailgun.com
       domain: process.env.SMTP_SERVER,
       // Your API key from mailgun.com
