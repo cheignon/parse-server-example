@@ -18,22 +18,30 @@ var api = new ParseServer({
   verifyUserEmails: true,
   publicServerURL: parse_url,
   emailAdapter: {
-        module: "simple-parse-smtp-adapter",
-        options: {
-            fromAddress: 'contact@helps-volunteers.fr',
-            user: 'contact@helps-volunteers.fr',
-            password: process.env.SMTP_SERVER_PW,
-            host: process.env.SMTP_SERVER,
-            isSSL: true, //True or false if you are using ssl 
-            port: process.env.SMTP_SERVER_PORT, //SSL port or another port 
-            name: 'helps-volunteers.fr', //  optional, used for identifying to the server  
-            //Somtimes the user email is not in the 'email' field, the email is search first in 
-            //email field, then in username field, if you have the user email in another field 
-            //You can specify here 
-            emailField: 'contact@helps-volunteers.fr', 
-            
-        }
-    },
+    module: 'parse-server-mailgun-adapter-template',
+    options: {
+      // The address that your emails come from
+      fromAddress: 'no-reply@yourdomain.com',
+      // Your domain from mailgun.com
+      domain: process.env.SMTP_SERVER,
+      // Your API key from mailgun.com
+      apiKey: process.env.SMTP_SERVER_PW,
+ 
+      // Verification email subject
+      verificationSubject: 'Please verify your e-mail for %appname%',
+      // Verification email body
+      verificationBody: 'Hi,\n\nYou are being asked to confirm the e-mail address %email% with %appname%\n\nClick here to confirm it:\n%link%',
+      //OPTIONAL (will send HTML version of email):
+      verificationBodyHTML: fs.readFileSync("./verificationBody.html", "utf8") ||  null,
+ 
+      // Password reset email subject
+      passwordResetSubject: 'Password Reset Request for %appname%',
+      // Password reset email body
+      passwordResetBody: 'Hi,\n\nYou requested a password reset for %appname%.\n\nClick here to reset it:\n%link%',
+      //OPTIONAL (will send HTML version of email):
+      passwordResetBodyHTML: "<!DOCTYPE html><html xmlns=http://www.w3.org/1999/xhtml>........"
+    }
+  },
   appName: process.env.APP_NAME || "MyApp",
   databaseURI: databaseUri || 'mongodb://localhost:27017/dev',
   cloud: process.env.CLOUD_CODE_MAIN || __dirname + '/cloud/main.js',
