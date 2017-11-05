@@ -16,7 +16,6 @@ var parse_url = process.env.SERVER_URL+process.env.PARSE_MOUNT;
 
 var api = new ParseServer({
   verifyUserEmails: true,
-  publicServerURL: parse_url,
   emailAdapter: {
         module: "simple-parse-smtp-adapter",
         options: {
@@ -31,7 +30,19 @@ var api = new ParseServer({
             //email field, then in username field, if you have the user email in another field 
             //You can specify here 
             emailField: 'Contact', 
-            
+            templates: {
+                //This template is used only for reset password email 
+                resetPassword: {
+                    //Path to your template 
+                    template: __dirname + '/views/email/reset-password',
+                    //Subject for this email 
+                    subject: 'Reset your password'
+                },
+                verifyEmail: {
+                    template: __dirname + '/views/email/verify-email',
+                    subject: 'Verify Email'
+                }
+            }
         }
     },
   appName: process.env.APP_NAME || "MyApp",
