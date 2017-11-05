@@ -16,6 +16,7 @@ var parse_url = process.env.SERVER_URL+process.env.PARSE_MOUNT;
 
 var api = new ParseServer({
   verifyUserEmails: true,
+  publicServerURL: process.env.SERVER_URL || 'http://localhost:1337/parse',
   emailAdapter: {
         module: "simple-parse-smtp-adapter",
         options: {
