@@ -6,7 +6,7 @@ var bodyParser = require("body-parser");
 var ParseServer = require('parse-server').ParseServer;
 var ParseDashboard = require('parse-dashboard');
 var path = require('path');
-
+var fs = require('fs')
 var databaseUri = process.env.DATABASE_URI || process.env.MONGODB_URI;
 
 if (!databaseUri) {
