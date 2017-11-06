@@ -16,32 +16,6 @@ var parse_url = process.env.SERVER_URL+process.env.PARSE_MOUNT;
 
 var api = new ParseServer({
   verifyUserEmails: true,
-  publicServerURL: parse_url,
-  emailAdapter: {
-    module: 'parse-server-mailgun-adapter-template',
-    options: {
-      // The address that your emails come from
-      fromAddress: 'contact@helps-volunteers.com',
-      // Your domain from mailgun.com
-      domain: process.env.SMTP_SERVER,
-      // Your API key from mailgun.com
-      apiKey: process.env.SMTP_SERVER_PW,
- 
-      // Verification email subject
-      verificationSubject: 'Please verify your e-mail for %appname%',
-      // Verification email body
-      verificationBody: 'Hi,\n\nYou are being asked to confirm the e-mail address %email% with %appname%\n\nClick here to confirm it:\n%link%',
-      //OPTIONAL (will send HTML version of email):
-      //verificationBodyHTML: fs.readFileSync("./verificationBody.html", "utf8") ||  null,
- 
-      // Password reset email subject
-      passwordResetSubject: 'Password Reset Request for %appname%',
-      // Password reset email body
-      passwordResetBody: 'Hi,\n\nYou requested a password reset for %appname%.\n\nClick here to reset it:\n%link%',
-      //OPTIONAL (will send HTML version of email):
-      passwordResetBodyHTML: "<!DOCTYPE html><html xmlns=http://www.w3.org/1999/xhtml>........"
-    }
-  },
   appName: process.env.APP_NAME || "MyApp",
   databaseURI: databaseUri || 'mongodb://localhost:27017/dev',
   cloud: process.env.CLOUD_CODE_MAIN || __dirname + '/cloud/main.js',
@@ -50,6 +24,29 @@ var api = new ParseServer({
   serverURL: process.env.SERVER_URL || 'http://localhost:1337/parse',  // Don't forget to change to https if needed
   liveQuery: {
     classNames: ["Posts", "Comments"] // List of classes to support for query subscriptions
+  },
+  // Environment where the user can confirm his e-mail address or reset his password (most likely the same as your 'serverURL')
+  publicServerURL: parse_url,
+  emailAdapter: {
+    module: 'parse-server-mandrill-adapter',
+    options: {
+      // API key from Mandrill account
+      apiKey: 'jSZSWvtS1FaKUVj-skfgmg',
+      // From email address
+      fromEmail: 'contact@helps-volunteers.com',
+      // Display name
+      displayName: 'no-reply@helps-volunteers.com',
+      // Reply-to email address
+      replyTo: 'no-reply@helps-volunteers.com',
+      // Verification email subject
+      verificationSubject: 'Please verify your e-mail for *|appname|*',
+      // Verification email body. This will be ignored when verificationTemplateName is used.
+      verificationBody: 'Hi *|username|*,\n\nYou are being asked to confirm the e-mail address *|email|* with *|appname|*\n\nClick here to confirm it:\n*|link|*',
+      // Password reset email subject
+      passwordResetSubject: 'Password Reset Request for *|appname|*',
+      // Password reset email body. This will be ignored when passwordResetTemplateName is used.
+      passwordResetBody: 'Hi *|username|*,\n\nYou requested a password reset for *|appname|*.\n\nClick here to reset it:\n*|link|*',
+    }
   }
 });
 
@@ -74,6 +71,7 @@ var dashboard = new ParseDashboard({
   ],
   "useEncryptedPasswords": true,
   "trustProxy": 1,
+
 });
 // Client-keys like the javascript key or the .NET key are not necessary with parse-server
 // If you wish you require them, you can set them as options in the initialization above:
