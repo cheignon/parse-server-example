@@ -28,25 +28,23 @@ var api = new ParseServer({
   // Environment where the user can confirm his e-mail address or reset his password (most likely the same as your 'serverURL')
   publicServerURL: process.env.SERVER_URL,
   emailAdapter: {
-    module: 'parse-server-mandrill-adapter',
+    module: 'parse-server-simple-mailgun-adapter',
     options: {
-      // API key from Mandrill account
-      apiKey: 'jSZSWvtS1FaKUVj-skfgmg',
-      // From email address
-      fromEmail: 'contact@helps-volunteers.com',
-      // Display name
-      displayName: 'no-reply@helps-volunteers.com',
-      // Reply-to email address
-      replyTo: 'no-reply@helps-volunteers.com',
-      // Verification email subject
-      verificationSubject: 'Please verify your e-mail for *|appname|*',
-      // Verification email body. This will be ignored when verificationTemplateName is used.
-      verificationBody: 'Hi *|username|*,\n\nYou are being asked to confirm the e-mail address *|email|* with *|appname|*\n\nClick here to confirm it:\n*|link|*',
-      // Password reset email subject
-      passwordResetSubject: 'Password Reset Request for *|appname|*',
-      // Password reset email body. This will be ignored when passwordResetTemplateName is used.
-      passwordResetBody: 'Hi *|username|*,\n\nYou requested a password reset for *|appname|*.\n\nClick here to reset it:\n*|link|*',
+      fromAddress: 'contact@helps.com',
+      domain: 'sandbox7c857f0a7c8942a1ba36203631774350.mailgun.org',
+      apiKey: 'key-a36530331f7d65b148a3a0e5bc4df739',
     }
+  },
+  accountLockout: {
+    duration: 5, // duration policy setting determines the number of minutes that a locked-out account remains locked out before automatically becoming unlocked. Set it to a value greater than 0 and less than 100000.
+    threshold: 3, // threshold policy setting determines the number of failed sign-in attempts that will cause a user account to be locked. Set it to an integer value greater than 0 and less than 1000.
+  },
+  passwordPolicy: {
+    validatorPattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/, // enforce password with at least 8 char with at least 1 lower case, 1 upper case and 1 digit
+    validatorCallback: (password) => { return validatePassword(password) }, 
+    doNotAllowUsername: true, // optional setting to disallow username in passwords
+    maxPasswordAge: 90, // optional setting in days for password expiry. Login fails if user does not reset the password within this period after signup/last reset. 
+    resetTokenValidityDuration: 24*60*60, // expire after 24 hours
   }
 });
 
