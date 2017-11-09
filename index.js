@@ -41,7 +41,7 @@ var api = new ParseServer({
   },
   passwordPolicy: {
     validatorPattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/, // enforce password with at least 8 char with at least 1 lower case, 1 upper case and 1 digit
-    validatorCallback: (password) => { return validatePassword(password) }, 
+    //validatorCallback: (password) => { return validatePassword(password) }, 
     doNotAllowUsername: true, // optional setting to disallow username in passwords
     maxPasswordAge: 90, // optional setting in days for password expiry. Login fails if user does not reset the password within this period after signup/last reset. 
     resetTokenValidityDuration: 24*60*60, // expire after 24 hours
