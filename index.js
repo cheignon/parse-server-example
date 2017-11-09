@@ -26,7 +26,7 @@ var api = new ParseServer({
     classNames: ["Posts", "Comments"] // List of classes to support for query subscriptions
   },
   // Environment where the user can confirm his e-mail address or reset his password (most likely the same as your 'serverURL')
-  publicServerURL: process.env.SERVER_URL,
+  publicServerURL: parse_url,
   emailAdapter: {
     module: 'parse-server-simple-mailgun-adapter',
     options: {
