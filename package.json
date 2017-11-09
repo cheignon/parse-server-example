@@ -15,6 +15,7 @@
     "parse": "~1.8.0",
     "parse-dashboard": "^1.1.0",
     "parse-server": "*",
+    "parse-server-mailgun-adapter-template": "^1.1.7",
     "parse-server-mandrill-adapter": "^1.2.1",
     "stripe": "^5.1.1"
   },
