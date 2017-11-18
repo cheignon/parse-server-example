@@ -13,7 +13,7 @@
     "express": "~4.11.x",
     "kerberos": "~0.0.x",
     "parse": "~1.8.0",
-    "parse-dashboard": "^1.1.0",
+    "parse-dashboard": "^1.1.2",
     "parse-server": "^2.6.5",
     "parse-server-mailgun-adapter-template": "^1.1.7",
     "parse-server-mandrill-adapter": "^1.2.1",
