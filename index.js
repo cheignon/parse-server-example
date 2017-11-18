@@ -1,5 +1,10 @@
 // Example express application adding the parse-server module to expose Parse
 // compatible API routes.
+var OneSignalPushAdapter = require('parse-server-onesignal-push-adapter');
+var oneSignalPushAdapter = new OneSignalPushAdapter({
+  oneSignalAppId:process.env.ONE_SIGNAL_APP_ID,
+  oneSignalApiKey:process.env.ONE_SIGNAL_APP_KEY
+});
 var stripe = require('stripe')(process.env.STRIPE_KEY);
 var express = require('express');
 var bodyParser = require("body-parser");
@@ -15,6 +20,9 @@ if (!databaseUri) {
 var parse_url = process.env.SERVER_URL+process.env.PARSE_MOUNT;
 
 var api = new ParseServer({
+  push: {
+    adapter: oneSignalPushAdapter
+  },
   verifyUserEmails: true,
   appName: process.env.APP_NAME || "MyApp",
   databaseURI: databaseUri || 'mongodb://localhost:27017/dev',
