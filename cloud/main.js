@@ -6,20 +6,16 @@ Parse.Cloud.define('hello', function(req, res) {
 	var receiver = params.receiver;
   	var messageText = params.text; 
 
-	var query = new Parse.Query(Parse.User);
-	query.equalTo('objectId',receiver)
 
+	getUser(receiver).then
+    (   
+        //When the promise is fulfilled function(user) fires, and now we have our USER!
+        function(user)
+        {
 
-	query.find({
-  		success: function(results) { 
-  			alert("Successfully retrieved " + results.length + " scores.");
-    		// Do something with the returned Parse.Object values
-    		for (var i = 0; i < results.length; i++) {
-      			var object = results[i];
-      			var pushQuery = new Parse.Query(Parse.Installation);
-  				pushQuery.equalTo('user', object); // targeting iOS devices only  
-  				// Our "Message" class has a "text" key with the body of the message itself                                                                                                                                    
-  				Parse.Push.send({
+        	var pushQuery = new Parse.Query(Parse.Installation);
+  			pushQuery.equalTo('user', object);
+            Parse.Push.send({
                 where: query,
                 data: {
                     "alert": messageText,
@@ -34,8 +30,32 @@ Parse.Cloud.define('hello', function(req, res) {
                     },
                     useMasterKey: true
                 });
-    		}
-  		},
-  		error: function(error) { alert("Error: " + error.code + " " + error.message); }
-	});
+        }
+        ,
+        function(error)
+        {
+            response.error(error);
+        }
+    );	
 });
+
+function getUser(userId)
+{
+    Parse.Cloud.useMasterKey();
+    var userQuery = new Parse.Query(Parse.User);
+    userQuery.equalTo("objectId", userId);
+
+    //Here you aren't directly returning a user, but you are returning a function that will sometime in the future return a user. This is considered a promise.
+    return userQuery.first
+    ({
+        success: function(userRetrieved)
+        {
+            //When the success method fires and you return userRetrieved you fulfill the above promise, and the userRetrieved continues up the chain.
+            return userRetrieved;
+        },
+        error: function(error)
+        {
+            return error;
+        }
+    });
+};
