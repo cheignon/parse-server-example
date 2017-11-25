@@ -26,7 +26,7 @@ var api = new ParseServer({
   verifyUserEmails: true,
   appName: process.env.APP_NAME || "MyApp",
   databaseURI: databaseUri || 'mongodb://localhost:27017/dev',
-  cloud: __dirname + '/cloud/main.js',
+  cloud: process.env.CLOUD_CODE_MAIN || __dirname + '/cloud/main.js',
   appId: process.env.APP_ID || 'myAppId',
   masterKey: process.env.MASTER_KEY || '', //Add your master key here. Keep it secret!
   serverURL: process.env.SERVER_URL || 'http://localhost:1337/parse',  // Don't forget to change to https if needed
@@ -40,7 +40,7 @@ var api = new ParseServer({
     options: {
       fromAddress: 'contact@helps-volunteers.com',
       domain: process.env.SMTP_SANDBOX_DOMAIN,
-      apiKey:  process.env.SMTP_SANDBOX_KEY,
+      apiKey: process.env.SMTP_SANDBOX_KEY,
     }
   },
   accountLockout: {

@@ -1,5 +1,5 @@
 
-Parse.Cloud.define('hello', function(req, res) {
+Parse.Cloud.define('push', function(req, res) {
 
   var messageText = req.object.get('message');
   var usersReceived = req.object.get('receiver');
