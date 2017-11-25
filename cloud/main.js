@@ -4,5 +4,6 @@ Parse.Cloud.define('hello', function(req, res) {
 });
 
 Parse.Cloud.define("push", function(request, response) {
+	console.log(request);
   res.success(request);
 });
