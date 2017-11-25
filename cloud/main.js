@@ -4,58 +4,24 @@ Parse.Cloud.define('hello', function(req, res) {
 	// request has 2 parameters: params passed by the client and the authorized user 
 	var params = req.params;
 	var receiver = params.receiver;
-  	var messageText = params.text; 
+	var pushQuery = new Parse.Query(Parse.Installation);
+  	pushQuery.equalTo('user', receiver); // targeting iOS devices only   
 
+  	// Our "Message" class has a "text" key with the body of the message itself                                                                                                                                    
+  	var messageText = params.text;
 
-	getUser(receiver).then
-    (   
-        //When the promise is fulfilled function(user) fires, and now we have our USER!
-        function(user)
-        {
+  	Parse.Push.send({
+    where: pushQuery, // Set our Installation query                                                                                                                                                              
+    data: {
+      alert: "Message: " + messageText
+     }
+  	}, { success: function() {
+      console.log("#### PUSH OK");
+  	 }, error: function(error) {
+      console.log("#### PUSH ERROR" + error.message);
+   	 }, useMasterKey: true
+   	});
 
-        	var pushQuery = new Parse.Query(Parse.Installation);
-  			pushQuery.equalTo('user', object);
-            Parse.Push.send({
-                where: query,
-                data: {
-                    "alert": messageText,
-                    "content-available": 1,
-                },
-                }, {
-                    success: function() {
-                        console.log('##### PUSH OK ');
-                    },
-                    error: function(error) {
-                        console.log('##### PUSH ERROR ');
-                    },
-                    useMasterKey: true
-                });
-        }
-        ,
-        function(error)
-        {
-            response.error(error);
-        }
-    );	
+  	console.log(req.params);
+  	res.success('Hi');
 });
-
-function getUser(userId)
-{
-    Parse.Cloud.useMasterKey();
-    var userQuery = new Parse.Query(Parse.User);
-    userQuery.equalTo("objectId", userId);
-
-    //Here you aren't directly returning a user, but you are returning a function that will sometime in the future return a user. This is considered a promise.
-    return userQuery.first
-    ({
-        success: function(userRetrieved)
-        {
-            //When the success method fires and you return userRetrieved you fulfill the above promise, and the userRetrieved continues up the chain.
-            return userRetrieved;
-        },
-        error: function(error)
-        {
-            return error;
-        }
-    });
-};
