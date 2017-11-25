@@ -3,7 +3,7 @@ Parse.Cloud.define('hello', function(req, res) {
 
 	// request has 2 parameters: params passed by the client and the authorized user 
 	var params = req.params;
-	var receiver = req.sender.receiver;
+	var receiver = params.receiver;
 
 	var pushQuery = new Parse.Query(Parse.Installation);
   	pushQuery.equalTo('user', receiver); // targeting receiver devices only   
