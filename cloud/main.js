@@ -14,18 +14,21 @@ Parse.Cloud.define('hello', function(req, res) {
 	console.log("receiver "+receiver);
 	console.log("messageText "+messageText);
   	Parse.Push.send({
-    where: pushQuery, // Set our Installation query                                                                                                                                                              
-    data: {
-      alert: "Message: " + messageText
-     }
-  	}, { success: function() {
-      console.log("#### PUSH OK");
-      res.success('success');
-  	 }, error: function(error) {
-      console.log("#### PUSH ERROR" + error.message);
-      res.success('Error');
-   	 }, useMasterKey: true
-   	});
+        where: pushQuery,
+        data: {
+          alert: 'Testing .....',
+          badge: 1,
+          sound: 'default'
+        }
+      }, {
+        useMasterKey: true,
+        success: function() {
+          console.log('Push sent!');
+        },
+        error: function(error) {
+          console.log('There was a problem :( ' + error);
+        }
+      });
 
   	console.log(req.params);
   	res.success('Hi');
