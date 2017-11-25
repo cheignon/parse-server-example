@@ -3,9 +3,9 @@ Parse.Cloud.define('hello', function(req, res) {
 
 	// request has 2 parameters: params passed by the client and the authorized user 
 	var params = req.params;
-	var receiver = req.sender.receiver;
+	var receiver = params.receiver;
   	var messageText = params.text; 
-  	
+
 	var query = new Parse.Query(Parse.User);
 	query.equalTo('objectId',receiver)
 
