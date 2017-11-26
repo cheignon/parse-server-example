@@ -50,7 +50,9 @@ var sendNotification = function(data) {
     console.log("ERROR:");
     console.log(e);
   });
-  
+
+  console.log("DATA:");
+  console.log(JSON.stringify(data));
   req.write(JSON.stringify(data));
   req.end();
 };
