@@ -4,14 +4,15 @@ Parse.Cloud.define('hello', function(req, res) {
 	// request has 2 parameters: params passed by the client and the authorized user 
 	var params = req.params;
 	var receiver = params.receiver;
+  var text = params.text
 
 	var message = { 
   		app_id: process.env.ONE_SIGNAL_APP_ID,
-  		contents: {"en": "English Message"},
+  		contents: {"fr": text},
   		include_player_ids: [receiver]
 	};
+
 	sendNotification(message);
-	req.success('hi');
 });
 
 var sendNotification = function(data) {
