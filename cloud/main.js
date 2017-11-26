@@ -53,14 +53,14 @@ var sendNotification = function(data, response) {
     res.on('data', function(data) {
       console.log("Response:");
       console.log(JSON.parse(data));
-      response.success({"success":true});
+      response.success("success to send a notificaion");
     });
   });
   
   req.on('error', function(e) {
     console.log("ERROR:");
     console.log(e);
-    response.success({"success":false});
+    response.error("failed to send notification");
   });
 
   console.log("DATA:");
