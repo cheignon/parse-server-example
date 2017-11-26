@@ -31,10 +31,10 @@ Parse.Cloud.define('hello', function(req, res) {
       data : datas
       
 	};
-	sendNotification(message);
+	sendNotification(message,res);
 });
 
-var sendNotification = function(data) {
+var sendNotification = function(data, response) {
   var headers = {
     "Content-Type": "application/json; charset=utf-8",
     "Authorization": "Basic "+process.env.ONE_SIGNAL_APP_KEY
@@ -53,12 +53,14 @@ var sendNotification = function(data) {
     res.on('data', function(data) {
       console.log("Response:");
       console.log(JSON.parse(data));
+      response.success({"success":true});
     });
   });
   
   req.on('error', function(e) {
     console.log("ERROR:");
     console.log(e);
+    response.success({"success":false});
   });
 
   console.log("DATA:");
