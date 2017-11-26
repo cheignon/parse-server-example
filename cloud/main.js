@@ -8,7 +8,7 @@ Parse.Cloud.define('hello', function(req, res) {
 
 	var message = { 
   		app_id: process.env.ONE_SIGNAL_APP_ID,
-  		contents: {"fr": text},
+  		contents: {"en": text},
   		include_player_ids: [receiver]
 	};
 
