@@ -20,7 +20,8 @@ Parse.Cloud.define('hello', function(req, res) {
   var sender = params.sender;
   var job_id = params.job_id;
   var timestamp = params.timestamp;
-  var datas = { sender_id:sender, offer_id : job_id , date : timestamp } ; 
+  var order = params.order_id;
+  var datas = { sender_id:sender, offer_id : job_id , date : timestamp , order_id : order } ; 
 
 	var message = { 
   		app_id: process.env.ONE_SIGNAL_APP_ID,
