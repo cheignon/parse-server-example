@@ -9,12 +9,16 @@ Parse.Cloud.define('hello', function(req, res) {
   var job = params.job;
 
   var text_en = sender_name+' needs an help on '+date+' for ' + job;
-  var text_fr = sender_name+' a besoin de d\'aide pour le '+date+' concernant '+job;
+  var text_fr = sender_name+' a besoin d\'aide pour le '+date+' concernant '+job;
+
+  var title_en = 'helpS Volunteers needs you 👋';
+  var title_fr = 'helpS Volunteers a besoin de vous 👋';
 
 	var message = { 
   		app_id: process.env.ONE_SIGNAL_APP_ID,
   		contents: {"en": text_en,"fr":text_fr},
   		include_player_ids: [receiver],
+      headings: {"en": title_en,"fr":title_fr},
       
 	};
 	sendNotification(message);
