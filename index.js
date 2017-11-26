@@ -38,7 +38,7 @@ var api = new ParseServer({
   emailAdapter: {
     module: 'parse-server-simple-mailgun-adapter',
     options: {
-      fromAddress: 'contact@helps-volunteers.com',
+      fromAddress: 'contact@helps-volunteers.fr',
       domain: process.env.SMTP_SANDBOX_DOMAIN,
       apiKey: process.env.SMTP_SANDBOX_KEY,
     }
