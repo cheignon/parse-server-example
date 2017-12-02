@@ -1,7 +1,7 @@
 
 
 Parse.Cloud.define('pushForResponse', function(req, res) {
-	response.success("success to send a notificaion");
+	res.success("success to send a notificaion");
 });
 
 Parse.Cloud.define('push', function(req, res) {
