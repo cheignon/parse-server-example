@@ -1,9 +1,14 @@
 
-Parse.Cloud.define('hello', function(req, res) {
+
+Parse.Cloud.define('pushForResponse', function(req, res) {
+	response.success("success to send a notificaion");
+}):
+
+Parse.Cloud.define('push', function(req, res) {
 
 	// request has 2 parameters: params passed by the client and the authorized user 
-	var params = req.params;
-	var receiver = params.receiver;
+  var params = req.params;
+  var receiver = params.receiver;
   var sender_name = params.sender_name;
   var date = params.date;
   var job = params.job;
