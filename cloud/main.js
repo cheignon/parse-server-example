@@ -1,7 +1,46 @@
 
 
 Parse.Cloud.define('pushForResponse', function(req, res) {
-	res.success("success to send a notificaion");
+
+  var params = req.params;
+  var player_id = params.player_id;
+  var response = params.response;
+  var firstname = params.user_name;
+
+  var title_en = '';
+  var title_fr = '';
+  var text_en = '';
+  var text_fr = '';
+  
+  if(response == true){
+
+     title_en = 'helpS Volunteers 👋';
+     title_fr = 'helpS Volunteers 👋';
+
+     text_en = firstname+' accept to do the job';
+     text_fr = sender_name+' a accepter votre demande';
+
+  }else{
+
+     
+     title_en = 'helpS Volunteers 👋';
+     title_fr = 'helpS Volunteers 👋';
+
+     text_en = firstname+' has rejected your request';
+     text_fr = sender_name+' a refusé  votre demande';
+  }
+
+  var message = { 
+      app_id: process.env.ONE_SIGNAL_APP_ID,
+      contents: {"en": text_en,"fr":text_fr},
+      include_player_ids: [receiver],
+      headings: {"en": title_en,"fr":title_fr},
+      content_available: true,
+      data : datas
+      
+  };
+  sendNotification(message,res);
+
 });
 
 Parse.Cloud.define('pushForRequest', function(req, res) {
