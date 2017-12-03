@@ -18,7 +18,7 @@ Parse.Cloud.define('pushForResponse', function(req, res) {
      title_fr = 'helpS Volunteers 👋';
 
      text_en = firstname+' accept to do the job';
-     text_fr = sender_name+' a accepter votre demande';
+     text_fr = firstname+' a accepter votre demande';
 
   }else{
 
@@ -27,13 +27,13 @@ Parse.Cloud.define('pushForResponse', function(req, res) {
      title_fr = 'helpS Volunteers 👋';
 
      text_en = firstname+' has rejected your request';
-     text_fr = sender_name+' a refusé  votre demande';
+     text_fr = firstname+' a refusé  votre demande';
   }
 
   var message = { 
       app_id: process.env.ONE_SIGNAL_APP_ID,
       contents: {"en": text_en,"fr":text_fr},
-      include_player_ids: [receiver],
+      include_player_ids: [player_id],
       headings: {"en": title_en,"fr":title_fr},
       content_available: true,
       data : datas
