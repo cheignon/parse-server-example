@@ -6,6 +6,7 @@ Parse.Cloud.define('pushForResponse', function(req, res) {
   var player_id = params.player_id;
   var response = params.response;
   var firstname = params.user_name;
+  console.log(params);
 
   var title_en = '';
   var title_fr = '';
@@ -30,7 +31,10 @@ Parse.Cloud.define('pushForResponse', function(req, res) {
      text_fr = firstname+' a refusé  votre demande';
   }
 
-  var datas = {sender_id:player_id} ; 
+  console.log(title_fr);
+  console.log(text_fr);
+
+  var  datas  = {sender_id:player_id} ; 
 
   var message = { 
       app_id: process.env.ONE_SIGNAL_APP_ID,
