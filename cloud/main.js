@@ -11,7 +11,7 @@ Parse.Cloud.define('pushForResponse', function(req, res) {
   var title_fr = '';
   var text_en = '';
   var text_fr = '';
-  
+
   if(response == true){
 
      title_en = 'helpS Volunteers 👋';
@@ -29,6 +29,8 @@ Parse.Cloud.define('pushForResponse', function(req, res) {
      text_en = firstname+' has rejected your request';
      text_fr = firstname+' a refusé  votre demande';
   }
+
+  var datas = {sender_id:player_id} ; 
 
   var message = { 
       app_id: process.env.ONE_SIGNAL_APP_ID,
