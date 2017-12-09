@@ -6,6 +6,8 @@ Parse.Cloud.define('pushForResponse', function(req, res) {
   var player_id = params.player_id;
   var response = params.response;
   var firstname = params.user_name;
+  var order_id = params.order_id;
+
   console.log('request : '+req);
   console.log('response : '+res);
 
@@ -35,7 +37,7 @@ Parse.Cloud.define('pushForResponse', function(req, res) {
   console.log(title_fr);
   console.log(text_fr);
 
-  var  datas  = {sender_id:player_id,type:'response'} ; 
+  var  datas  = {sender_id:player_id,type:'response',order:order_id} ; 
 
   var message = { 
       app_id: process.env.ONE_SIGNAL_APP_ID,
