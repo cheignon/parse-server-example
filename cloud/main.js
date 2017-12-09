@@ -6,7 +6,8 @@ Parse.Cloud.define('pushForResponse', function(req, res) {
   var player_id = params.player_id;
   var response = params.response;
   var firstname = params.user_name;
-  console.log(params);
+  console.log('request : '+req);
+  console.log('response : '+res);
 
   var title_en = '';
   var title_fr = '';
