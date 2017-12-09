@@ -35,7 +35,7 @@ Parse.Cloud.define('pushForResponse', function(req, res) {
   console.log(title_fr);
   console.log(text_fr);
 
-  var  datas  = {sender_id:player_id} ; 
+  var  datas  = {sender_id:player_id,type:'response'} ; 
 
   var message = { 
       app_id: process.env.ONE_SIGNAL_APP_ID,
@@ -72,7 +72,7 @@ Parse.Cloud.define('pushForRequest', function(req, res) {
   var job_id = params.job_id;
   var timestamp = params.timestamp;
   var order = params.order_id;
-  var datas = { sender_id:sender, offer_id : job_id , date : timestamp , order_id : order } ; 
+  var datas = { sender_id:sender, offer_id : job_id , date : timestamp , order_id : order, type: 'request' } ; 
 
 	var message = { 
   		app_id: process.env.ONE_SIGNAL_APP_ID,
