@@ -107,6 +107,9 @@ app.get('/', function(req, res) {
 app.get('/test', function(req, res) {
   res.sendFile(path.join(__dirname, '/public/test.html'));
 });
+app.get('/cgu',function(req,res){
+  res.sendFile(path.join(__dirname+'/public/cgu.html'));
+});
 
 
 
@@ -276,10 +279,7 @@ app.post('/stripe/subscriptions/delete', (req, res) => {
     });
 
 });
-app.get('/',function(req,res){
-  res.sendFile(path.join(__dirname+'/cgu.html'));
-  //__dirname : It will resolve to your project folder.
-});
+
 app.post('/stripe/subscriptions/update', (req, res) => {
 
 
